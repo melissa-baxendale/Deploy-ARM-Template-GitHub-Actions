@@ -1,0 +1,29 @@
+name: Deploy ARM Template
+
+on:
+  push:
+    branches:
+      - main
+env:
+  AZURE_SUBSCRIPTION_ID: fb285ce9-43cd-4d38-8500-90d4505be4dc
+  AZURE_RESOURCE_GROUP: mebaxend-GitHubActionExercise-rg
+
+jobs:
+  deploy-virtual-network-template:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@main
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy ARM Template
+        uses: azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          subscriptionId: ${{ env.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ env.AZURE_RESOURCE_GROUP }}
+          template: ./azuredeploy.json
